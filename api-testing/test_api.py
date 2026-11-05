@@ -182,3 +182,4 @@ def test_tc12_stale_boundary_exact_seconds(authenticated_client: AquaSenseClient
   ref_stale = device_time + timedelta(seconds=301)
   res_stale = authenticated_client.get_device_status("device-001", reference_time=ref_stale)
   assert res_stale.is_stale is True
+

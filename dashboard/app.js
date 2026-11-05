@@ -474,3 +474,4 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSimulator();
   loadData();
 });
+

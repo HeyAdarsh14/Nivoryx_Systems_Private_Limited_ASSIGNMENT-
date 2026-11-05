@@ -169,3 +169,4 @@ api-testing/test_api.py::test_tc12_stale_boundary_exact_seconds PASSED   [100%]
    * Prevents time-dependent test flakiness (e.g., CI failures when clock rolls over midnight) and allows microsecond-precise boundary validation of the 300-second stale policy.
 5. **How does the client differentiate device offline from pump state off?**
    * "Offline" indicates an unconfirmed communication loss or network failure, where pump state is unknown. "Pump off" is an authoritative hardware state confirmed by device telemetry.
+

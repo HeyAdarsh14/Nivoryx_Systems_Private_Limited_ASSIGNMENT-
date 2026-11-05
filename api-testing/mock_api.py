@@ -110,3 +110,4 @@ class MockAquaSenseBackend:
     # Return device payload
     data = KNOWN_DEVICES[device_id]
     return MockAPIResponse(200, data)
+

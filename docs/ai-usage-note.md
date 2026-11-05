@@ -10,3 +10,4 @@
 
 **One Thing It Got Wrong & How I Fixed It:**
 > The assistant initially used a non-strict inequality (`<= 20%`) and triggered an active critical low-level alert on the main screen because one historical record reached 18% at 16:00, despite the current (latest by timestamp) reading at 20:00 being 55%. I fixed the logic to strict inequality (`level < 20%` where 20.0% is treated as safe boundary), restricted the active alert banner exclusively to the latest valid timestamp, and cleanly separated the historical 18% event into an informative historical notification and highlighted chart point.
+

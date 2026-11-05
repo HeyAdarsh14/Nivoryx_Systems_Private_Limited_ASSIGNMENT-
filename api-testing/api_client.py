@@ -200,3 +200,4 @@ class AquaSenseClient:
       is_low_level_alert=is_low_alert,
       raw_payload=data
     )
+
