@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AquaSense — Smart Tank Level Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js for time-series visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="dashboard-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1>AquaSense Dashboard</h1>
+          <p class="subtitle">IoT Water Level Monitoring & Telemetry &bull; Nivoryx Systems</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="live-dot" id="systemDot"></span>
+        <span id="systemStatusText">System Online</span>
+        <span class="badge date-badge" id="telemetryDate">2026-11-02</span>
+      </div>
+    </header>
+
+    <!-- Alert Container -->
+    <section id="alertContainer" class="alert-section" aria-live="polite">
+      <!-- Injected by app.js: Active Alert banner if current < 20%, or Normal status banner -->
+    </section>
+
+    <!-- Metric Cards Grid -->
+    <section class="metrics-grid" aria-label="Key Tank Metrics">
+      <!-- Current Level Card -->
+      <article class="metric-card current-card">
+        <div class="card-header">
+          <span class="card-label">Current Tank Level</span>
+          <span class="badge" id="currentStatusBadge">Optimal</span>
+        </div>
+        <div class="metric-value-wrapper">
+          <span class="metric-value" id="currentLevelVal">--%</span>
+          <div class="tank-visual-mini">
+            <div class="tank-fill-bar" id="currentFillBar" style="width: 0%;"></div>
+          </div>
+        </div>
+        <p class="metric-footer" id="currentTimestamp">Latest update: --:--</p>
+      </article>
+
+      <!-- Today's Minimum Card -->
+      <article class="metric-card min-card">
+        <div class="card-header">
+          <span class="card-label">Today's Minimum</span>
+          <span class="badge alert-badge-pill" id="minAlertPill">Under 20% Flag</span>
+        </div>
+        <div class="metric-value-wrapper">
+          <span class="metric-value text-warning" id="minLevelVal">--%</span>
+        </div>
+        <p class="metric-footer" id="minTimestamp">Recorded at: --:--</p>
+      </article>
+
+      <!-- Today's Maximum Card -->
+      <article class="metric-card max-card">
+        <div class="card-header">
+          <span class="card-label">Today's Maximum</span>
+          <span class="badge badge-neutral">Peak Level</span>
+        </div>
+        <div class="metric-value-wrapper">
+          <span class="metric-value text-info" id="maxLevelVal">--%</span>
+        </div>
+        <p class="metric-footer" id="maxTimestamp">Recorded at: --:--</p>
+      </article>
+    </section>
+
+    <!-- Main Content Grid: Chart + Historical Summary -->
+    <div class="content-grid">
+      <!-- Time-Series Chart -->
+      <section class="card chart-card">
+        <div class="card-title-row">
+          <div>
+            <h2>Tank Level Trend (24h)</h2>
+            <p class="card-subtitle">Telemetry readings sampled across the day</p>
+          </div>
+          <div class="legend-indicator">
+            <span class="legend-threshold-line"></span>
+            <span class="legend-text">20% Critical Safety Threshold</span>
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="levelChart" aria-label="Water tank level time series chart" role="img"></canvas>
+        </div>
+      </section>
+
+      <!-- Interactive Evaluator & Threshold Testing Controls -->
+      <section class="card simulator-card">
+        <h2>Interactive Evaluator & Boundary Tests</h2>
+        <p class="card-subtitle">Verify dynamic threshold logic (< 20%) directly in the browser</p>
+        <div class="sim-buttons">
+          <button type="button" class="btn btn-secondary" id="btnResetOfficial">Reset to Official Data (55%)</button>
+          <button type="button" class="btn btn-danger" id="btnSimulate15">Simulate 15% (Critical Alert)</button>
+          <button type="button" class="btn btn-warning" id="btnSimulate199">Simulate 19.9% (Boundary Trigger)</button>
+          <button type="button" class="btn btn-success" id="btnSimulate200">Simulate 20.0% (Boundary Safe)</button>
+        </div>
+        <div class="custom-inject-box">
+          <label for="customInputLevel">Inject Custom Reading (%):</label>
+          <div class="input-row">
+            <input type="number" id="customInputLevel" min="0" max="100" step="0.1" placeholder="e.g. 19.5">
+            <button type="button" class="btn btn-primary" id="btnInjectCustom">Apply</button>
+          </div>
+          <p id="injectFeedback" class="feedback-text"></p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Historical Telemetry Table -->
+    <section class="card history-card">
+      <div class="card-title-row">
+        <div>
+          <h2>Telemetry Readings History</h2>
+          <p class="card-subtitle">Chronological record of all validated sensor observations</p>
+        </div>
+        <span class="badge" id="readingCountBadge">8 Readings</span>
+      </div>
+      <div class="table-responsive">
+        <table class="telemetry-table" id="telemetryTable">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Timestamp</th>
+              <th scope="col">Time</th>
+              <th scope="col">Water Level (%)</th>
+              <th scope="col">Threshold Status</th>
+            </tr>
+          </thead>
+          <tbody id="telemetryTableBody">
+            <!-- Populated dynamically by app.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Technical Architecture & Assignment Context -->
+    <footer class="dashboard-footer">
+      <div class="footer-grid">
+        <div>
+          <h3>AquaSense Telemetry Engine</h3>
+          <p>Assignment Build for Nivoryx Systems Private Limited. Built with vanilla JavaScript, modern responsive CSS, and Chart.js.</p>
+        </div>
+        <div>
+          <h3>Threshold Rules</h3>
+          <p>Critical Alert triggers strictly when <code>level &lt; 20%</code>. Values at <code>20.0%</code> are classified as safe boundary.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
