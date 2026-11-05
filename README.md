@@ -160,16 +160,4 @@ api-testing/test_api.py::test_tc12_stale_boundary_exact_seconds PASSED   [100%]
 
 ---
 
-## Interview Discussion Points
-
-1. **Why vanilla JavaScript instead of React/Vue?**
-   * Eliminates unnecessary build-step overhead for a static, data-driven telemetry widget while cleanly showing pure JavaScript DOM manipulation, event handling, and data transformation fundamentals.
-2. **How is the current tank level selected?**
-   * By sorting records chronologically by timestamp (`sortChronologically`) and taking the latest record. We never assume array index order equals chronological order.
-3. **Why is the active alert not triggered for the 18% reading?**
-   * The 18% reading occurred at 16:00, whereas the latest reading at 20:00 is 55%. Current status reflects real-time physical conditions; historical anomalies are displayed as historical context rather than an ongoing emergency.
-4. **Why inject clock references in API tests?**
-   * Prevents time-dependent test flakiness (e.g., CI failures when clock rolls over midnight) and allows microsecond-precise boundary validation of the 300-second stale policy.
-5. **How does the client differentiate device offline from pump state off?**
-   * "Offline" indicates an unconfirmed communication loss or network failure, where pump state is unknown. "Pump off" is an authoritative hardware state confirmed by device telemetry.
 
