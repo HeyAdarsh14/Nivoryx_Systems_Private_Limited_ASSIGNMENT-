@@ -1,8 +1,11 @@
 # AquaSense Mini-Build — IoT Tank Level Monitoring & API Testing
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=flat&logo=github)](https://heyadarsh14.github.io/Nivoryx_Systems_Private_Limited_ASSIGNMENT-/)
 [![Tests](https://img.shields.io/badge/pytest-12%20passed-brightgreen.svg)](#part-b--automated-api-testing)
 [![Platform](https://img.shields.io/badge/JavaScript-Vanilla%20ES6-yellow.svg)](#part-a--tank-level-dashboard)
 [![Assignment](https://img.shields.io/badge/Nivoryx%20Systems-Internship%20Assignment-blue.svg)](#overview)
+
+> **🚀 Live Website Link:** [https://heyadarsh14.github.io/Nivoryx_Systems_Private_Limited_ASSIGNMENT-/](https://heyadarsh14.github.io/Nivoryx_Systems_Private_Limited_ASSIGNMENT-/)
 
 This repository contains the complete implementation for the **AquaSense Mini-Build** assignment for **Nivoryx Systems Private Limited**, submitted by **Adarsh Gupta**.
 
